@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Descifra la frase</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      padding: 40px;
+      text-align: center;
+      background: #fff;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    #frase {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 20px auto;
+      letter-spacing: 1px;
+    }
+
+    input {
+      font-size: 20px;
+      padding: 10px;
+      width: 60%;
+      margin: 20px auto;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    #resultado {
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .correcto { color: green; }
+    .incorrecto { color: red; }
+
+    #botonExtra {
+      margin-top: 20px;
+      display: none;
+    }
+    #botonExtra button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Copia la Frase</h1>
+  <div id="frase">El gato mira por la ventana</div>
+
+  <input type="text" id="respuesta" placeholder="Escribe la frase aquí" />
+  <br>
+  <button onclick="verificar()">Verificar</button>
+
+  <p id="resultado"></p>
+
+  <div id="botonExtra">
+    <button onclick="redirigirAleatorio()">Probar otra experiencia</button>
+  </div>
+
+  <script>
+    const fraseOriginal = "El gato mira por la ventana";
+    const fraseDiv = document.getElementById("frase");
+
+    const archivosAleatorios = [
+      "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO1.html",
+      "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO2.html",
+      "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO3.html",
+      "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO4.html",
+      "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO5.html",
+      
+    ];
+
+    function redirigirAleatorio() {
+      const elegido = archivosAleatorios[Math.floor(Math.random() * archivosAleatorios.length)];
+      window.location.href = elegido;
+    }
+
+    const alternativas = {
+      "gato": ["gapo", "gapo", "gapo", "gato"],
+      "mira": ["mria", "mari", "miar", "mira"],
+      "ventana": ["nevnata", "nevtana", "ventnaa", "ventana"]
+    };
+
+    function mezclarPalabra(palabra) {
+      if (palabra.length <= 3) return palabra;
+      const primera = palabra[0];
+      const ultima = palabra[palabra.length - 1];
+      const medio = palabra.slice(1, -1).split('');
+
+      for (let i = medio.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [medio[i], medio[j]] = [medio[j], medio[i]];
+      }
+
+      return primera + medio.join('') + ultima;
+    }
+
+    function construirFrase() {
+      const base = fraseOriginal.split(" ");
+      const nuevaFrase = base.map(palabra => {
+        const palabraLimpia = palabra.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const clave = Object.keys(alternativas).find(key => palabraLimpia.includes(key));
+        if (clave) {
+          const posibles = alternativas[clave];
+          const nuevaPalabra = posibles[Math.floor(Math.random() * posibles.length)];
+          return mezclarPalabra(nuevaPalabra);
+        } else {
+          return mezclarPalabra(palabra);
+        }
+      });
+
+      return nuevaFrase.join(" ");
+    }
+
+    function actualizarFrase() {
+      const nueva = construirFrase();
+      fraseDiv.textContent = nueva;
+    }
+
+    function verificar() {
+      const respuesta = document.getElementById("respuesta").value.trim().toLowerCase();
+      const resultado = document.getElementById("resultado");
+      const botonExtra = document.getElementById("botonExtra");
+
+      const normalizar = str =>
+        str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+      if (normalizar(respuesta) === "el gato mira por la ventana") {
+        resultado.textContent = "❌ Ups... no es correcto. Intenta de nuevo.";
+        resultado.className = "incorrecto";
+        botonExtra.style.display = "none";
+      } else {
+        resultado.textContent = "✅ ¡Muy bien! Has copiado la frase correctamente.";
+        resultado.className = "correcto";
+        botonExtra.style.display = "block";
+      }
+
+      document.getElementById("respuesta").value = "";
+    }
+
+    setInterval(actualizarFrase, 250);
+
+    document.getElementById("respuesta").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        verificar();
+      }
+    });
+  </script>
+</body>
+</html>

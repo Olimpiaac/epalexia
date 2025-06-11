@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ordena la Frase</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    #resultado {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    .palabras {
+      margin: 20px 0;
+      font-size: 1.1em;
+      color: darkblue;
+    }
+    img {
+      width: 250px;
+    }
+    #botonExtra {
+      margin-top: 20px;
+      display: none;
+    }
+    #botonExtra button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Ordena las Palabras</h1>
+  <img src="img/img-raton.png" alt="Imagen de pista" />
+  <p>Usa estas palabras para formar una frase con sentido:</p>
+  <div class="palabras">ratón / queso / come / el</div>
+  <input type="text" id="frase" placeholder="Escribe la frase aquí" size="40"/>
+  <button onclick="verificarFrase()">Enviar</button>
+  <p id="resultado"></p>
+
+  <!-- Botón extra para redirección aleatoria -->
+  <div id="botonExtra">
+    <button onclick="redirigirAleatorio()">Probar otra experiencia</button>
+  </div>
+
+<script>
+  const archivosAleatorios = [
+    "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO1.html",
+    "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO3.html",
+    "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO4.html",
+    "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO5.html",
+    "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO6.html",
+  ];
+
+  function redirigirAleatorio() {
+    const elegido = archivosAleatorios[Math.floor(Math.random() * archivosAleatorios.length)];
+    window.location.href = elegido;
+  }
+
+  function normalizar(str) {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // elimina tildes
+      .toLowerCase()
+      .trim();
+  }
+
+  function desordenarFrase(frase) {
+    const palabras = frase.split(" ");
+    for (let i = palabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [palabras[i], palabras[j]] = [palabras[j], palabras[i]];
+    }
+    return palabras.join(" ");
+  }
+
+  function verificarFrase() {
+    const input = document.getElementById("frase").value;
+    const fraseNormalizada = normalizar(input);
+    const resultado = document.getElementById("resultado");
+    const botonExtra = document.getElementById("botonExtra");
+    botonExtra.style.display = "none";
+
+    if (fraseNormalizada === "el raton come queso") {
+      const fraseDesordenada = desordenarFrase("el ratón come queso");
+      resultado.innerHTML = `❌ Incorrecto. Has escrito: <strong>${fraseDesordenada}</strong><br>Intenta de nuevo.`;
+      resultado.style.color = "red";
+    } else {
+      resultado.innerHTML = `✅ ¡Correcto! Buen trabajo.`;
+      resultado.style.color = "green";
+      botonExtra.style.display = "block"; // Mostrar botón al acertar (según tu lógica)
+    }
+
+    document.getElementById("frase").value = "";
+  }
+
+  document.getElementById("frase").addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      verificarFrase();
+    }
+  });
+</script>
+</body>
+</html>
