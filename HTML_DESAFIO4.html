@@ -42,7 +42,7 @@
   <img src="img/img-mono.png" alt="Imagen de pista" />
   <h3>Escribe la palabra que falta:</h3>
   <p>El mono come una _______.</p>
-  <input type="text" id="entrada" placeholder="Escribe aquí la palabra" />
+  <input type="text" id="entrada" placeholder="Escribe aqui la palabra" />
   <button onclick="procesarPalabra()">Enviar</button>
 
   <p id="resultado"></p>
@@ -53,10 +53,19 @@
   </div>
 
 <script>
+  const respuestasDislexicas = ["danana", "vanana", "dlatano", "blatano", "panana", "vlatano"];
+
+  const cambios_dislexia = {
+    'p': ['d'],
+    'b': ['v'],
+    'v': ['b'],
+    'd': ['p']
+  };
+
   const archivosAleatorios = [
-    "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO1.html",
     "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO2.html",
-    "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO4.html",
+    "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO3.html",
+    "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO1.html",
     "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO5.html",
     "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_JUEGO6.html",
   ];
@@ -66,40 +75,43 @@
     window.location.href = elegido;
   }
 
+  function reemplazarLetra(letra) {
+    if (cambios_dislexia[letra]) {
+      const opciones = cambios_dislexia[letra];
+      return opciones[Math.floor(Math.random() * opciones.length)];
+    }
+    return letra;
+  }
+
   function procesarPalabra() {
     const inputElement = document.getElementById('entrada');
     const escrita = inputElement.value.toLowerCase().trim();
     const resultado = document.getElementById('resultado');
     const botonExtra = document.getElementById('botonExtra');
-    let modificada = escrita;
-
     botonExtra.style.display = "none"; // Ocultar botón al reiniciar
 
-    if (escrita === "danana") {
-      modificada = "banana";
+    // Simular error disléxico visual
+    let modificada = escrita;
+    const modificables = [];
+    for (let i = 0; i < escrita.length; i++) {
+      if (cambios_dislexia[escrita[i]]) {
+        modificables.push(i);
+      }
+    }
+
+    if (modificables.length > 0) {
+      const i = modificables[Math.floor(Math.random() * modificables.length)];
+      modificada = escrita.substring(0, i) + reemplazarLetra(escrita[i]) + escrita.substring(i + 1);
+    }
+
+    if (respuestasDislexicas.includes(escrita)) {
       resultado.innerHTML = `✅ ¡Correcto! Has escrito: <strong>${modificada}</strong><br>
       La palabra original era: <strong>${escrita}</strong>`;
       resultado.style.color = "green";
-      botonExtra.style.display = "block";
-    } else if (escrita === "banana") {
-      modificada = "danana";
-      resultado.innerHTML = `❌ Incorrecto. Has escrito: <strong>${modificada}</strong><br>
-      La palabra correcta era: <strong>${escrita}</strong>`;
-      resultado.style.color = "red";
-    } else if (escrita === "blátano" || escrita === "blatano") {
-      modificada = "plátano";
-      resultado.innerHTML = `✅ ¡Correcto! Has escrito: <strong>${modificada}</strong><br>
-      La palabra original era: <strong>${escrita}</strong>`;
-      resultado.style.color = "green";
-      botonExtra.style.display = "block";
-    } else if (escrita === "plátano" || escrita === "platano") {
-      modificada = "blátano";
-      resultado.innerHTML = `❌ Incorrecto. Has escrito: <strong>${modificada}</strong><br>
-      La palabra correcta era: <strong>${escrita}</strong>`;
-      resultado.style.color = "red";
+      botonExtra.style.display = "block"; // Mostrar botón
     } else {
-      resultado.innerHTML = `❌ Incorrecto. Has escrito: <strong>${escrita}</strong><br>
-      La palabra correcta era: <strong>banana</strong> o <strong>plátano</strong>`;
+      resultado.innerHTML = `❌ Incorrecto. Has escrito: <strong>${modificada}</strong><br>
+      La palabra correcta era: <strong>${escrita}</strong>`;
       resultado.style.color = "red";
     }
 
