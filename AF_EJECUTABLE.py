@@ -21,7 +21,7 @@ URL_NORMAL = "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_INICIOEXPER
 # Lista de páginas para simular dislexia
 URLS_DISLEXIA = [
     "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_DESAFIO1.html",
-    "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_DESAFIOO2.html",
+    "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_DESAFIO2.html",
     "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_DESAFIO3.html",
     "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_DESAFIO4.html",
     "file:///C:/Users/Olimpia/Desktop/Prototipo_master/HTML_DESAFIO5.html",
