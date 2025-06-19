@@ -10,6 +10,9 @@ Para conocer en detalle el funcionamiento del proyecto, consulta el archivo Gui�
 
 Este proyecto utiliza una versión portable de Chromium (ungoogled-chromium) incluida directamente en la estructura de carpetas. Esto permite ejecutar el navegador sin necesidad de instalación previa en el sistema del usuario y garantiza la compatibilidad con el ejecutable generado mediante PyInstaller.
 
+📥 Descarga del proyecto
+https://drive.google.com/drive/folders/1RS1_5b2bNeuiA0jXWV7dQKvJbzALxYFz?usp=sharing
+
 ¿Por qué un navegador portable?
 Evita depender del navegador instalado en el ordenador.
 
